@@ -32,7 +32,7 @@ analogue_offset = 0.0
 # enabled = 1
 # coupling type = PS4000_DC = 1
 # range = PS4000_2V = 7
-channel_range = ps.PS4000_RANGE['PS4000_5V']
+channel_range = ps.PS4000_RANGE['PS4000_2V']
 status["setChA"] = ps.ps4000SetChannel(chandle,
                                         ps.PS4000_CHANNEL['PS4000_CHANNEL_A'],
                                         enabled,
@@ -54,7 +54,7 @@ status["setChB"] = ps.ps4000SetChannel(chandle,
 assert_pico_ok(status["setChB"])
 
 # Size of capture
-sizeOfOneBuffer = int(1e6)
+sizeOfOneBuffer = int(16e6)
 numBuffersToCapture = 2
 
 totalSamples = sizeOfOneBuffer * numBuffersToCapture
@@ -96,7 +96,7 @@ status["setDataBuffersB"] = ps.ps4000SetDataBuffers(chandle,
 assert_pico_ok(status["setDataBuffersB"])
 
 # Begin streaming mode:
-sampleInterval = ctypes.c_int32(299)
+sampleInterval = ctypes.c_int32(150)
 sampleUnits = ps.PS4000_TIME_UNITS['PS4000_NS']
 # We are not triggering:
 maxPreTriggerSamples = 0
@@ -114,8 +114,9 @@ status["runStreaming"] = ps.ps4000RunStreaming(chandle,
 assert_pico_ok(status["runStreaming"])
 
 actualSampleInterval = sampleInterval.value
+actualSampleIntervalNs = actualSampleInterval
 
-print(f"Capturing at sample interval {actualSampleInterval} ns for {totalSamples*actualSampleInterval*1e-9} s")
+print("Capturing at sample interval %s ns" % actualSampleIntervalNs)
 
 # We need a big buffer, not registered with the driver, to keep our complete capture in.
 bufferCompleteA = np.zeros(shape=totalSamples, dtype=np.int16)
@@ -147,7 +148,7 @@ while nextSample < totalSamples and not autoStopOuter:
     if not wasCalledBack:
         # If we weren't called back by the driver, this means no data is ready. Sleep for a short while before trying
         # again.
-        time.sleep(0.01)
+        time.sleep(0.001)
 
 print("Done grabbing values.")
 
@@ -161,15 +162,13 @@ adc2mVChAMax = adc2mV(bufferCompleteA, channel_range, maxADC)
 adc2mVChBMax = adc2mV(bufferCompleteB, channel_range, maxADC)
 
 # Create time data
-print(actualSampleInterval, sampleInterval.value)
-time = np.linspace(0, (totalSamples ) * actualSampleInterval*1e-9, totalSamples)
+time = np.linspace(0, (totalSamples - 1) * actualSampleIntervalNs, totalSamples)
 
 # Plot data from channel A and B
 plt.plot(time, adc2mVChAMax[:])
 plt.plot(time, adc2mVChBMax[:])
-plt.xlabel('Time (s)')
+plt.xlabel('Time (ns)')
 plt.ylabel('Voltage (mV)')
-plt.grid()
 plt.show()
 
 # Stop the scope

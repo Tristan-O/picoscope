@@ -54,6 +54,8 @@ async function pico_stop() {
 async function pico_reconnect() {
     disable(true);
     try {
+        running_flag = false;
+        stop_flag = false;
         await eel.py_pico_reconnect()();
     } catch {
     }
@@ -104,6 +106,13 @@ async function save_buff(binsize) {
     $('#myToast').toast('show')
 }
 
+function clear_plots() {
+    console.log('Clearing plots does not actually clear data')
+    Plotly.update("plotAtime", {x:[[]], y:[[]]}, {}, [0]);
+    Plotly.update("plotAfreq", {x:[[]], y:[[]]}, {}, [0]);
+    Plotly.update("plotBtime", {x:[[]], y:[[]]}, {}, [0]);
+    Plotly.update("plotBfreq", {x:[[]], y:[[]]}, {}, [0]);
+}
 async function plot() {
     let binsize = get_int('binsize');
     if (!binsize) {
@@ -312,6 +321,9 @@ document.getElementById('binsize').addEventListener('blur', function(event) {
     if (!binsize || binsize < 1) {
         document.getElementById('binsize').value = 1;
     }
+    if (!running_flag) {
+        plot();
+    }
 });
 document.getElementById('live-fs').addEventListener('blur', function(event) {
     let fs = get_float('live-fs');
@@ -357,3 +369,4 @@ document.getElementById('single-window').addEventListener('blur', function(event
         el.value = parseFloat(el.max);
     }
 });
+

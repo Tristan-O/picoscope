@@ -4,10 +4,21 @@ h2, h5 {
     white-space: nowrap;
 }
 
+#signature {
+    color: #333;
+    font-weight: 500;
+    font-size: small;
+}
+
 label {
     font-weight: bold;
     color: #555;
     white-space: nowrap;
+}
+#single-autosave-label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 21px;
 }
 
 .form-control {
@@ -28,23 +39,14 @@ th {
     background-color: #313131;
 }
 
-.btn {
-    border-radius: 4px;
-}
-.btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-}
-.btn-warning {
-    background-color: #ffc107;
-    border-color: #ffc107;
-}
-
 #selected-directory {
     font-weight: bold;
     color: #333;
 }
 
+.form-check {
+    margin-top: 5px;
+}
 .form-check-input[type="checkbox"] {
     width: 2.25em;
     height: 1.25em;
@@ -74,7 +76,6 @@ th {
 .form-check-input[type="checkbox"]:checked::before {
     transform: translateX(1em);
 }
-
 
 .toast-container {
     position: fixed;
@@ -190,7 +191,7 @@ input:out-of-range {
     border: 1px solid transparent;
     border-radius: 0;
     padding: 10px 15px;
-    transition: all 0.3s ease;
+    /* transition: all 0.3s ease; */
 }
 
 .nav-tabs .nav-link:hover,

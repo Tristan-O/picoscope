@@ -1,8 +1,8 @@
 from picoscope4000 import picoscope4000
 from Buffer import BinnedRingBuffer
 
-import numpy as np
 import os, json, datetime
+import numpy as np
 import h5py
 import eel
 
