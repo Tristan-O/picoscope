@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Picoscope 4262 Live Interface</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript" src="/eel.js"></script>
+</head>
+<body>
+    <div class="container mt-3 mb-3">
+        <div class="row">
+            <div class="col-6">
+                <h2>General</h2>
+
+                <div class="form-row">
+                    <div class="col-6">
+                        <h5>Channel A</h5>
+                        <div class="form-row">
+                            <div class="col-2 form-group">
+                                <div class="tooltip-container">
+                                    <div class="form-check form-switch">
+                                        <input id="A-enable" class="form-check-input align-items-center disable-me" type="checkbox" checked="true">
+                                        <div class="tooltip-text">Enable or disable channel A</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5 form-group">
+                                <div class="tooltip-container">
+                                    <select id="A-range" class="form-control disable-me">
+                                        <option value="0.01">&#177;10 mV</option>
+                                        <option value="0.02">&#177;20 mV</option>
+                                        <option value="0.05">&#177;50 mV</option>
+                                        <option value="0.1">&#177;100 mV</option>
+                                        <option value="0.2">&#177;200 mV</option>
+                                        <option value="0.5">&#177;500 mV</option>
+                                        <option selected value="1">&#177;1 V</option>
+                                        <option value="2">&#177;2 V</option>
+                                        <option value="5">&#177;5 V</option>
+                                        <option value="10">&#177;10 V</option>
+                                        <option value="20">&#177;20 V</option>
+                                    </select>
+                                    <div class="tooltip-text">Set voltage range for channel A</div>
+                                </div>
+                            </div>
+                            <div class="col-5 form-group">
+                                <div class="tooltip-container">
+                                    <select id="A-coupling" class="form-control disable-me">
+                                        <option value="DC">DC</option>
+                                        <option value="AC">AC</option>
+                                    </select>
+                                    <div class="tooltip-text">Set coupling for channel A (use DC coupling if you care about the DC offset of your signal, or want low-frequency components)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <h5>Channel B</h5>
+                        <div class="form-row">
+                            <div class="col-2 form-group">
+                                <div class="tooltip-container">
+                                    <div class="form-check form-switch">
+                                        <input id="B-enable" class="form-check-input align-items-center disable-me" type="checkbox" checked="true">
+                                    </div>
+                                    <div class="tooltip-text">Enable or disable channel B</div>
+                                </div>
+                            </div>
+                            <div class="col-5 form-group">
+                                <div class="tooltip-container">
+                                    <select id="B-range" class="form-control disable-me">
+                                        <option value="0.01">&#177;10 mV</option>
+                                        <option value="0.02">&#177;20 mV</option>
+                                        <option value="0.05">&#177;50 mV</option>
+                                        <option value="0.1">&#177;100 mV</option>
+                                        <option value="0.2">&#177;200 mV</option>
+                                        <option value="0.5">&#177;500 mV</option>
+                                        <option selected value="1">&#177;1 V</option>
+                                        <option value="2">&#177;2 V</option>
+                                        <option value="5">&#177;5 V</option>
+                                        <option value="10">&#177;10 V</option>
+                                        <option value="20">&#177;20 V</option>
+                                    </select>
+                                    <div class="tooltip-text">Set voltage range for channel B</div>
+                                </div>
+                                </div>
+                            <div class="col-5 form-group">
+                                <div class="tooltip-container">
+                                    <select id="B-coupling" class="form-control disable-me">
+                                        <option value="DC">DC</option>
+                                        <option value="AC">AC</option>
+                                    </select>
+                                    <div class="tooltip-text">Set coupling for channel B (use DC coupling if you care about the DC offset of your signal, or want low-frequency components)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                     
+                </div>
+                    
+                <div class="form-row">
+                    <div class="col-12 mt-1">
+                        <h5>Plot Settings</h5>
+                    </div>
+                    <div class="form-group col-6">
+                        <div class="tooltip-container">
+                            <label class="label-right" for="binsize">Bin Size</label>
+                            <input type="number" id="binsize" class="form-control" value="2" min="1">
+                            <div class="tooltip-text">Set bin size (this will only affect plotting)</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <div class="tooltip-container">
+                            
+                            <label class="label-right" for="PSDscale">PSD Scale</label>
+                            <select id="PSDscale" class="form-control">
+                                <option value="linear">Linear</option>
+                                <option value="log">Log</option>
+                            </select>
+                            <div class="tooltip-text">Display PSD y-axes on linear or logarithmic scales</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-12">
+                        <h5 class="mt-1">Save Settings</h5>
+                    </div>
+                    <div id="selected-directory" class="col-8 form-group">NO OUTPUT DIRECTORY SELECTED!</div>
+                    <div class="col-4 form-group">
+                        <button id="select-directory-btn" class="btn btn-primary btn-block" onclick="select_dir()">Select Out Directory</button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-10">
+                        <div class="tooltip-container">
+                            <input type="text" id="file-suffix" class="form-control" value="%Y%m%d_%H%M%S_mydata.hdf5">
+                            <div class="tooltip-text">Filename format codes will be formatted by the acquisition's start date/time. For a complete list of acceptable codes, see a strftime reference.
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>%Y</td>
+                                            <td>4-digit year</td>
+                                    
+                                        <tr>
+                                            <td>%m</td>
+                                            <td>2-digit month</td>
+                                        </tr>
+                                        <tr>
+                                            <td>%d</td>
+                                            <td>2-digit day of month</td>
+                                        </tr>
+                                        <tr>
+                                            <td>%H</td>
+                                            <td>2-digit hour (24-hour)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>%M</td>
+                                            <td>2-digit minute</td>
+                                        </tr>
+                                        <tr>
+                                            <td>%S</td>
+                                            <td>2-digit second</td>
+                                        </tr>
+                                        <tr>
+                                            <td>%p</td>
+                                            <td>AM or PM</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <button class="btn btn-primary btn-block disable-me" onclick="save_buff(1)">Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-6">
+                <h2>Acquisition</h2>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="live-tab" data-toggle="tab" href="#live" role="tab" aria-controls="live" aria-selected="true">Live</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="single-tab" data-toggle="tab" href="#single" role="tab" aria-controls="single" aria-selected="false">Single</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+
+                    <!-- ####################### LIVE TAB #######################  -->
+                    <div class="tab-pane fade show active" id="live" role="tabpanel" aria-labelledby="live-tab">
+                        <div class="form-row">
+                            <div class="col-4">
+                                <div class="form-group tooltip-container">
+                                    <label class="label-above" for="live-window">Window (s)</label>
+                                    <input type="number" id="live-window" class="form-control disable-me" value="2" min="0" max="60">
+                                    <div class="tooltip-text">Set the duration to display for this continuous acquire</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group tooltip-container">
+                                    <label class="label-above" for="live-fs">Sample rate (Hz)</label>
+                                    <input type="number" id="live-fs" class="form-control disable-me" value="1000" min="0" max="10e6">
+                                    <div class="tooltip-text">Note: The picoscope does not accept arbitrary sampling rates. This value will be updated to reflect the actual sampling rate when streaming. Also note that when acquiring two channels, at the fastest sampling rate (6.667 MHz) the internal clock is not reliable for more than ~1 second</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group tooltip-container">
+                                    <label class="label-above" for="live-dt">Time per point (s)</label>
+                                    <input id="live-dt" type="number" class="form-control" disabled="true" value="0.0010000">
+                                    <div class="tooltip-text">1/(sample rate). The number of digits past the decimal here is purposeful; the picoscope accepts time between points only down to multiples of 100 ns</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-12 tooltip-container">
+                                <button id="live-btn" class="btn btn-primary btn-block mt-3 disable-me" onclick="live()">Begin Live View</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ####################### SINGLE TAB #######################  -->
+                    <div class="tab-pane fade" id="single" role="tabpanel" aria-labelledby="single-tab">
+                        <div class="form-row">
+                            <div class="col-4">
+                                <div class="form-group tooltip-container">
+                                    <label class="label-above" for="single-window">Window (s)</label>
+                                    <input type="number" id="single-window" class="form-control disable-me" value="2" min="0" max="60">
+                                    <div class="tooltip-text">Set the duration of this finite acquisition</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-4">
+                                <div class="form-group tooltip-container">
+                                    <label for="single-fs">Sample rate (Hz)</label>
+                                    <input type="number" id="single-fs" class="form-control disable-me" value="5e6"  min="0" max="10e6">
+                                    <div class="tooltip-text">Note: The picoscope does not accept arbitrary sampling rates. This value will be updated to reflect the actual sampling rate when streaming. Also note that when acquiring two channels, at the fastest sampling rate (6.667 MHz) the internal clock is not reliable for more than ~1 second</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group tooltip-container">
+                                    <label class="label-above" for="single-dt">Time per point (s)</label>
+                                    <input id="single-dt" type="number" class="form-control" disabled="true" value="0.0000002">
+                                    <div class="tooltip-text">1/(sample rate). The number of digits past the decimal here is purposeful; the picoscope accepts time between points only down to multiples of 100 ns</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-9 tooltip-container">
+                                <button id="single-btn" class="btn btn-primary btn-block mt-3 disable-me" onclick="single()">Begin Single Acquire</button>
+                                <div class="tooltip-text">Plot will not update during acquisition. For rendering, plot will be binned, but unbinned data is stored.</div>
+                            </div>
+                            <div class="form-group col-3">
+                                <label class="form-check-label" for="single-autosave">Autosave</label>
+                                <div class="form-check form-switch">
+                                    <input id="single-autosave" class="form-check-input" type="checkbox">
+                                </div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" id="progressBar"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ####################### FROM FILE TAB #######################  -->
+                    <!-- This is hard, javascript doesn't get access to local file system -->
+                    <!-- <div class="tab-pane fade" id="fromfile" role="tabpanel" aria-labelledby="fromfile-tab">
+                        <div class="form-group">
+                            <label>Not yet implemented</label>
+                            <button class="btn btn-primary mt-3" onclick="">From file</button>
+                            <input type="text" id="filePath" class="form-control mt-2 disable-me" placeholder="File path">
+                        </div>
+                    </div> -->
+
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <button id="stop-btn" class="btn btn-warning btn-block mt-3" onclick="stop_flag=true;">Stop</button>
+                    </div>
+                    <div class="form-group col-6">
+                        <button id="refresh-btn" class="btn btn-warning btn-block mt-3 disable-me" onclick="pico_reconnect()">Reconnect</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2>Plots</h2>
+        <div class="form-row">
+            <div class="col-6">
+                <div id="plotAtime" class="grid-item"></div>
+            </div>
+            <div class="col-6">
+                <div id="plotBtime" class="grid-item"></div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-6">
+                <div id="plotAfreq" class="grid-item"></div>
+            </div>
+            <div class="col-6">
+                <div id="plotBfreq" class="grid-item"></div>
+            </div>
+        </div>
+
+        <div class="toast-container">
+            <div class="toast w-auto" id="myToast" data-delay="10000">
+                <div class="toast-header">
+                    <strong id="toast-title" class="mr-auto">Title</strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+                </div>
+                <div id="toast-body" class="toast-body">
+                    innerText
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="main.js"></script>
+    </div>
+</body>
+</html>

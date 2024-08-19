@@ -1,0 +1,234 @@
+h2, h5 {
+    color: #333;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+label {
+    font-weight: bold;
+    color: #555;
+    white-space: nowrap;
+}
+
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #313131;
+}
+
+.btn {
+    border-radius: 4px;
+}
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+#selected-directory {
+    font-weight: bold;
+    color: #333;
+}
+
+.form-check-input[type="checkbox"] {
+    width: 2.25em;
+    height: 1.25em;
+    background-color: #ddd;
+    border-radius: 1.25em;
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.form-check-input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    top: 0.125em;
+    left: 0.125em;
+    width: 1em;
+    height: 1em;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+.form-check-input[type="checkbox"]:checked {
+    background-color: #007bff;
+}
+.form-check-input[type="checkbox"]:checked::before {
+    transform: translateX(1em);
+}
+
+
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1050;
+}
+.toast-success {
+    background-color: #28a745;
+    color: white;
+}
+.toast-failure {
+    background-color: #dc3545;
+    color: white;
+}
+.toast-body {
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grid-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 300px;
+    margin-top: 10px;
+}
+
+input:out-of-range {
+    border: 2px solid red !important;
+}
+
+.progress-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 30px;
+    /* background-color: #4caf50; */
+    text-align: center;
+    line-height: 30px;
+    color: black;
+    border-radius: 5px;
+}
+
+.progress-bar-danger {
+    background-color: #dc3545 !important;
+}
+
+.tooltip-container {
+    position: relative;
+    display: block;
+    align-items: center;
+}
+
+
+.tooltip-container .tooltip-text {
+    display: none; /* Hide the tooltip and remove it from the layout */
+    width: 240px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 125%; /* Position below the button */
+    left: 50%;
+    margin-left: -60px; /* Center the tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip-text {
+    display: block; /* Show the tooltip */
+    opacity: 1;
+}
+
+
+/* Custom tab styles */
+.nav-tabs {
+    border-bottom: 2px solid #ddd;
+}
+
+.nav-tabs .nav-link {
+    color: #6c757d;
+    font-weight: bold;
+    border: 1px solid transparent;
+    border-radius: 0;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
+    color: #495057;
+    background-color: #e9ecef;
+    border-color: #ddd;
+}
+
+.nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d #6c757d #e9ecef;
+    border-bottom: 2px solid #6c757d;
+}
+
+.tab-content .tab-pane {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+}
+
+/* Pulsing effect */
+.pulsing:not(.active) {
+    animation: pulse 2s infinite;
+    color: #495057;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: #e9ecef;
+    }
+    50% {
+        background-color: #ffffff;
+    }
+    100% {
+        background-color: #e9ecef;
+    }
+}

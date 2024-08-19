@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+h2 {
+    margin-bottom: 20px;
+    color: #343a40;
+}
+.btn-close {
+    margin-top: 20px;
+}
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+.directory {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+.tree {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+}
+.tree ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+.tree li {
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 3px;
+}
+.tree li:hover {
+    background-color: #e9ecef;
+}
+.tree li.collapsed > ul {
+    display: none;
+}
+.tree li.collapsed::before {
+    content: "▶";
+    margin-right: 5px;
+}
+.tree li.expanded::before {
+    content: "▼";
+    margin-right: 5px;
+}
+.tree li.selected {
+    background-color: #007bff;
+    color: white;
+}
+.tree li.unselected {
+    background-color: whitesmoke;
+    color: black;
+}
