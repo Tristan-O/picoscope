@@ -103,6 +103,7 @@ maxPreTriggerSamples = 0
 autoStopOn = 1
 # No downsampling:
 downsampleRatio = 1
+
 status["runStreaming"] = ps.ps4000RunStreaming(chandle,
                                                 ctypes.byref(sampleInterval),
                                                 sampleUnits,
@@ -111,7 +112,20 @@ status["runStreaming"] = ps.ps4000RunStreaming(chandle,
                                                 autoStopOn,
                                                 downsampleRatio,
                                                 sizeOfOneBuffer)
+
 assert_pico_ok(status["runStreaming"])
+
+# import sys
+# print( sys.version )
+# SN = ctypes.create_string_buffer(b"0000000000")
+# SNString = ctypes.cast(SN,ctypes.c_char_p)
+# stringLength = len(SN)
+# requiredSize = ctypes.c_int16(stringLength)
+# infoSN = 0x04 #or 0x00?
+# status["getUnitInfo_SN"] = ps.ps4000GetUnitInfo(chandle, SNString,stringLength,ctypes.byref(requiredSize),infoSN)
+# assert_pico_ok(status["getUnitInfo_SN"])
+# print(SN.value)
+# sys.exit()
 
 actualSampleInterval = sampleInterval.value
 actualSampleIntervalNs = actualSampleInterval

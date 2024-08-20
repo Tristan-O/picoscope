@@ -33,9 +33,12 @@ eel.init('web') #name of the directory that has the html
 
 MAX_N_BINS = 100000
 pico = picoscope4000()
-pico.connect()
-buffA = BinnedRingBuffer(size=2,dtype=np.int16)
-buffB = BinnedRingBuffer(size=2,dtype=np.int16)
+try:
+    pico.connect()
+except Exception as e:
+    print('ERROR: Picoscope not connected!', e)
+buffA = BinnedRingBuffer(size=2, dtype=np.int16)
+buffB = BinnedRingBuffer(size=2, dtype=np.int16)
 stream_times = []
 
 def debug(*args):
@@ -141,6 +144,28 @@ def py_get_psd(binsize:int):
     return res
 
 @eel.expose
+def py_get_psd_integral(fLo:float, fHi:float):
+    '''Get integral of PSD over bandwidth defined by (fLo, fHi)
+    '''
+
+    if len(buffA):
+        freq = np.fft.rfftfreq(len(buffA), pico.get_dt())
+        scale = pico.channels['A'].get_volt_scale()*pico.get_dt()/(len(buffA))
+        psd = (np.abs(np.fft.rfft(buffA.get_data(1))**2)*scale)
+        resA = np.sum( psd[(fLo<freq)*(freq<fHi)] )*(freq[1]-freq[0])
+    else:
+        resA = None
+    if len(buffB):
+        freq = np.fft.rfftfreq(len(buffB), pico.get_dt())
+        scale = pico.channels['B'].get_volt_scale()*pico.get_dt()/(len(buffB))
+        psd = (np.abs(np.fft.rfft(buffB.get_data(1))**2)*scale)
+        resB = np.sum( psd[(fLo<freq)*(freq<fHi)] )*(freq[1]-freq[0])
+    else:
+        resB = None
+
+    return {'A':resA, 'B':resB}
+
+@eel.expose
 def py_pico_stop():
     debug('in py_pico_stop')
 
@@ -221,7 +246,7 @@ def py_save_buff(dir:str, file_suffix:str, binsize:int):
         print(f'File saved to {path}')
         return True, f'File saved!', path
     except Exception as e:
-        print('ERROR: ', e)
+        print('FILE NOT SAVED! ERROR: ', e)
         return False, f'ERROR: File NOT saved!', str(e)
 
 @eel.expose

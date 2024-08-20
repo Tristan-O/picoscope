@@ -131,6 +131,10 @@ async function plot() {
         Plotly.update("plotBfreq", {x:[x_data.freq], y:[freq_data.B]}, {}, [0]);
     }
 }
+async function get_psd_integral() {
+    
+    psd_int = await eel.py_get_psd_integral(fLo, fHi)();
+}
 async function live() {
     disable(true);
     document.getElementById('live-btn').classList.add('btn-primary')
