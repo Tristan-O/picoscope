@@ -7,16 +7,27 @@ import h5py
 import eel
 
 
+default = {} #in case the file doesn't exist
 try:
-    default = {} #in case the file doesn't exist
     with open(f'default.json', 'r') as f:
         default = json.load(f)
         if not default['directory'].endswith('\\'):
             default['directory'] = default['directory'][:-1]
 except Exception as e:
-    print('ERROR in loading default.json:', e)
+    print(f'Could not find default.json ({e})')
     if 'directory' not in default.keys():
-        default['directory'] = os.path.expanduser('~')
+        print('Making a new one for you...')
+        if os.path.exists(os.path.expanduser('~\\Documents')):
+            default['directory'] = os.path.expanduser('~\\Documents')
+        elif os.path.exists(os.path.expanduser('~\\My Documents')):
+            default['directory'] = os.path.expanduser('~\\My Documents')
+        else:
+            default['directory'] = os.path.expanduser('~')
+    if not default['directory'].endswith('\\') and not default['directory'].endswith('/'):
+        default['directory'] = default['directory']+'\\'
+    with open(f'default.json', 'w') as f:
+        json.dump(default, f)
+        print('default.json has been created!')
 eel.init('web') #name of the directory that has the html
 
 
@@ -140,6 +151,8 @@ def py_get_dir_structure():
     debug('in py_get_dir_structure')
 
     root_dir = default['directory']
+    if not root_dir.endswith('\\'):
+        root_dir = root_dir+'\\'
     dir_structure = []
 
     def exclude(dir:str)->bool:
@@ -149,7 +162,7 @@ def py_get_dir_structure():
             return True
         return False
 
-    for root, dirs, files in os.walk(root_dir, topdown=True):
+    for root, dirs, _ in os.walk(root_dir, topdown=True):
         #skip dirs like .git
         dirs[:] = [d for d in dirs if not exclude(d)]
 
@@ -205,6 +218,7 @@ def py_save_buff(dir:str, file_suffix:str, binsize:int):
             grp.create_dataset('A_coupling', data = pico.channels['A'].coupling)
             grp.create_dataset('B_coupling', data = pico.channels['B'].coupling)
 
+        print(f'File saved to {path}')
         return True, f'File saved!', path
     except Exception as e:
         print('ERROR: ', e)

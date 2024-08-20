@@ -3,7 +3,7 @@ import time
 
 import ctypes
 from picosdk.ps4000 import ps4000 as ps
-
+from picosdk.functions import assert_pico_ok
 
 class picoscope4000:
     def __init__(self):
@@ -20,7 +20,7 @@ class picoscope4000:
         '''Connect to the scope'''
         # Open PicoScope 4000 Series device
         # Returns handle to chandle for use in future API functions
-        assert 0 == ps.ps4000OpenUnit(ctypes.byref(self.chandle))
+        assert_pico_ok( ps.ps4000OpenUnit(ctypes.byref(self.chandle)) )
     def set_channel(self, chan:str, enable:bool, rng:float, coupling:str):
         '''Set channels on the picoscope.'''
         self.channels[chan].set(rng=rng, coupling=coupling, enable=enable)
@@ -53,14 +53,14 @@ class picoscope4000:
         # No downsampling:
         downsampleRatio = 1
 
-        assert 0 == ps.ps4000RunStreaming(self.chandle,
+        assert_pico_ok( ps.ps4000RunStreaming(self.chandle,
             ctypes.byref(self.sampleInterval),
             sampleUnits,
             maxPreTriggerSamples,
             self.totalSamples,
             autoStopOn,
             downsampleRatio,
-            min(self.totalSamples, channel.BUFFER_ALLOC))
+            min(self.totalSamples, channel.BUFFER_ALLOC)))
         self.dt_nanos = self.sampleInterval.value # THIS LINE HAS TO COME AFTER ps4000RunStreaming(...).
     
         def _callback(handle, noOfSamples, buff_start_idx, overflow, triggerAt, triggered, autoStop, param):
@@ -159,11 +159,11 @@ class channel:
         self.coupling = coupling
         self.enabled = bool(enable)
 
-        assert 0 == ps.ps4000SetChannel(self.parent_scope.chandle,
+        assert_pico_ok( ps.ps4000SetChannel(self.parent_scope.chandle,
             self._chan(),
             self._enabled(),
             self._coupling(),
-            self._rng())
+            self._rng()) )
     def buffer_initialize(self):
         '''Need two buffers here. 
             One is the ring buffer used by the picoscope, but it is capped at ~1e6 points.
@@ -181,12 +181,12 @@ class channel:
         # buffer length = maxSamples
         # segment index = 0 ???
         # ratio mode = PS4000_RATIO_MODE_NONE = 0
-        assert 0 == ps.ps4000SetDataBuffers(
+        assert_pico_ok( ps.ps4000SetDataBuffers(
             self.parent_scope.chandle,
             self._chan(),
             self.ring_buffer.ctypes.data_as(ctypes.POINTER(ctypes.c_int16)),
             None,
-            channel.BUFFER_ALLOC)
+            channel.BUFFER_ALLOC) )
                 
         # We need a big buffer, not registered with the driver, to keep our complete capture in.
     def get_volt_range(self):
